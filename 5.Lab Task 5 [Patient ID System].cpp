@@ -1,115 +1,149 @@
-#include <iostream>
+#include<iostream>
+#include<string>
+
 using namespace std;
 
-struct Node {
-    int patientID;
-    Node* next;
+struct Node
+{
+  int PatientID;
+  string PatientName;
+  
+  Node* next;
 };
-
 
 Node* head = NULL;
 
+void InsertAtBeg(int id,string Name)
+{
+	Node* newNode = new Node();
+	newNode->PatientID = id;
+	newNode->PatientName = Name;
+	
+	newNode->next = head;
+	head = newNode;
+	
+	cout<<"Insert At Start"<<endl;
+}
 
-void insertAtEnd(int id) {
-    Node* newNode = new Node();
-    newNode->patientID = id;
-    newNode->next = NULL;
-
-    if (head == NULL) {
-        head = newNode;
-        cout << "Patient added at the end (first patient).\n";
-        return;
-    }
-
-    Node* temp = head;
-    while (temp->next != NULL) {
-        temp = temp->next;
-    }
-
+void InsertAtEnd(int id,string Name)
+{
+	Node* newNode = new Node();
+	newNode->PatientID = id;
+	newNode->PatientName = Name;
+	
+	newNode->next = NULL;
+	
+	
+	if(head == NULL)
+	{
+		head = newNode;
+		cout<<"Insert At End"<<endl;
+		
+		return;
+	}
+	
+	Node* temp = head;
+	
+    while(temp->next != NULL)
+    {
+    	temp = temp->next;
+	}
+    
+   
     temp->next = newNode;
-    cout << "Patient added at the end.\n";
+    cout<<"Insert at end"<<endl;
 }
 
-
-void insertAtBeginning(int id) {
-    Node* newNode = new Node();
-    newNode->patientID = id;
-    newNode->next = head;
-    head = newNode;
-    cout << "Emergency patient added at the beginning.\n";
+void Display()
+{
+	if(head == NULL)
+	{
+		cout<<"Nothing For Display"<<endl;
+		return;
+	}
+	
+	Node* temp = head;
+	
+	while(temp->next != NULL)
+	{
+		cout<<"ID: "<<temp->PatientID<<" Name: "<<temp->PatientName<<endl;
+		temp = temp->next;
+	}
+	
 }
 
-void displayPatients() {
-    if (head == NULL) {
-        cout << "No patients currently checked in.\n";
-        return;
-    }
+void Search(int id)
+{
+	Node* temp = head;
 
-    Node* temp = head;
-    cout << "Current Patients:\n";
-    while (temp != NULL) {
-        cout << "Patient ID: " << temp->patientID << endl;
-        temp = temp->next;
-    }
+    while(temp != NULL)
+    {
+    	if(temp->PatientID == id)
+    	{
+    		cout<<"Patient Found ID: "<<id<<endl;
+    		return;
+		}
+		temp = temp->next;
+	}
+	
+	cout<<"Patient Not Found"<<endl;
 }
 
+void Removed(int id)
+{
+	if(head == NULL)
+	{
+		cout<<"No Patient for Removed"<<endl;
+		return;
+	}
+	
+	if(head->PatientID == id)
+	{
+		Node* temp = head;
+		head = head->next;
+		
+		delete temp;
+		cout<<"Patient Removed"<<endl;
+		return;
+	}
+	
+	Node* curr = head;
+	
+	while(curr->next != NULL && curr->PatientID != id)
+	{
+		curr = curr->next;
+	}
+	
+	if(curr->next == NULL)
+	{
+		cout<<"No Patient For Removed"<<endl;
+		return;
+	}
+	
+		Node* temp = curr->next;
+		curr->next = curr->next->next;
+		
+		delete temp;
+		cout<<"Patient Removed"<<endl;
 
-void searchPatient(int id) {
-    Node* temp = head;
-    while (temp != NULL) {
-        if (temp->patientID == id) {
-            cout << "Patient found: ID = " << id << endl;
-            return;
-        }
-        temp = temp->next;
-    }
-    cout << "Patient with ID " << id << " not found.\n";
+	
 }
 
+int main()
+{
 
-void removePatient(int id) {
-    if (head == NULL) {
-        cout << "No patients to remove.\n";
-        return;
-    }
+ int choice, id;
+ string name;
 
-
-    if (head->patientID == id) {
-        Node* temp = head;
-        head = head->next;
-        delete temp;
-        cout << "Patient removed successfully.\n";
-        return;
-    }
-
-    Node* curr = head;
-    while (curr->next != NULL && curr->next->patientID != id) {
-        curr = curr->next;
-    }
-
-    if (curr->next == NULL) {
-        cout << "Patient not found.\n";
-        return;
-    }
-
-    Node* temp = curr->next;
-    curr->next = curr->next->next;
-    delete temp;
-
-    cout << "Patient removed successfully.\n";
-}
-
-
-int main() {
-    int choice, id;
-
+   
     while (true) {
+    	system("cls");
         cout << "\n--- Hospital Patient Management System ---\n";
         cout << "1. Add Patient (End)\n";
         cout << "2. Add Emergency Patient (Beginning)\n";
         cout << "3. Display All Patients\n";
         cout << "4. Search Patient by ID\n";
-        cout << "5. Remove Patient (Treated)\n";
+        cout << "5. Removed Patient by ID\n";
         cout << "6. Exit\n";
         cout << "Enter choice: ";
         cin >> choice;
@@ -117,40 +151,49 @@ int main() {
         switch (choice) {
             case 1:
                 cout << "Enter Patient ID: ";
-                cin >> id;
-                insertAtEnd(id);
+                cin >>id;
+                cout << "Enter Patient Name: ";
+                cin >>name;
+                InsertAtEnd(id,name);
                 break;
 
             case 2:
-                cout << "Enter Patient ID: ";
-                cin >> id;
-                insertAtBeginning(id);
+                 cout << "Enter Patient ID: ";
+                cin >>id;
+                cout << "Enter Patient Name: ";
+                cin >>name;
+                InsertAtBeg(id,name);
                 break;
 
             case 3:
-                displayPatients();
+            	cout<<"Patient Info:"<<endl;
+            	cout<<""<<endl;
+                Display();
+            	cout<<""<<endl;
                 break;
 
             case 4:
                 cout << "Enter Patient ID to search: ";
                 cin >> id;
-                searchPatient(id);
+                Search(id);
                 break;
-
+                
             case 5:
-                cout << "Enter Patient ID to remove: ";
+                cout << "Enter Patient ID to Remove: ";
                 cin >> id;
-                removePatient(id);
+                Removed(id);
                 break;
-
+                
             case 6:
                 cout << "Exiting program...\n";
                 return 0;
 
             default:
-                cout << "Invalid choice. Try again.\n";
+                cout << "Invalid choice. Try again.\n";    
         }
+           system("pause");
     }
 
-    return 0;
+
+return 0;
 }
